@@ -20,7 +20,7 @@ Each team member will take responsibility for major components during the initia
 | Project Component | Assigned Team Member(s) |
 |------------------|-------------------------|
 | Frontend UI (React/Next.js) | Reeham, Fatima |
-| Backend API (Node.js/Express) | Jamal |
+| Backend API (Node.js/Express) | Rikuto |
 | Database setup & modeling (MongoDB) | Rikuto |
 | Map integration (Google Maps/Mapbox) | Rikuto |
 | User authentication & authorization | Reeham |
