@@ -1,5 +1,5 @@
-const Review = require("../models/Review");
-const Restaurant = require("../models/Restaurant");
+const Review = require("../models/review");
+const Restaurant = require("../models/restaurant");
 
 // GET /api/reviews/restaurant/:restaurantId
 const getReviewsForRestaurant = async (req, res) => {
