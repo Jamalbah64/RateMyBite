@@ -101,4 +101,3 @@ The project is considered fully functional when:
 - Admin can manage restaurants  
 - Map loads accurately with all markers  
 - All major workflows run without errors  
-
