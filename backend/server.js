@@ -1,6 +1,7 @@
 //This file is for the main server setup and configuration
 const express = require('express');
 const mongoose = require('mongoose');
+const path = require('path');
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -8,6 +9,9 @@ const restaurantRoutes = require('./routes/restaurants');
 
 const app = express();
 app.use(express.json()); // parse JSON bodies
+
+// Serve static files from the frontend directory
+app.use(express.static(path.join(__dirname, '../frontend')));
 
 // Register API routes
 app.use('/api/restaurants', restaurantRoutes);
