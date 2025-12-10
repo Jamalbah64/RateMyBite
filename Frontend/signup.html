@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sign Up — RateMyBite</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-left">
+      <img src="img/restaurant.png" class="logo-img" alt="Logo">
+      <h1 class="logo">RateMyBite</h1>
+    </div>
+
+    <ul class="nav-center">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="restaurants.html">Restaurants</a></li>
+    </ul>
+
+    <div class="nav-right">
+      <button onclick="location.href='login.html'" class="login-btn">Login</button>
+    </div>
+  </nav>
+
+  <main class="auth-page">
+    <form id="signup-form" class="auth-card glass">
+      <h2>Create account</h2>
+      <label>Full name
+        <input id="signup-name" type="text" required />
+      </label>
+      <label>Email
+        <input id="signup-email" type="email" required />
+      </label>
+      <label>Password (min 6)
+        <input id="signup-password" type="password" required minlength="6" />
+      </label>
+      <button type="submit" class="btn-primary">Sign up</button>
+      <p class="muted">Already have an account? <a href="login.html">Log in</a></p>
+    </form>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

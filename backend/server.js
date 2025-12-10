@@ -16,9 +16,9 @@ app.use(express.static(path.join(__dirname, '../frontend')));
 // Register API routes
 app.use('/api/restaurants', restaurantRoutes);
 
-// Home route for testing
+// Serve index.html for the homepage
 app.get('/', (req, res) => {
-    res.send('RateMyBite API is running');
+    res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
 
 const PORT = process.env.PORT || 3000;

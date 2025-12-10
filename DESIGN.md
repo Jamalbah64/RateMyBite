@@ -5,6 +5,7 @@
 Finding good places to eat can be difficult, especially when users must rely on long lists or outdated reviews. RateMyBite solves this by offering an **interactive map-based food discovery platform** powered by community reviews. The system aims to make restaurant discovery easier, faster, and more visually intuitive.
 
 This project will benefit:
+
 - **Students** seeking affordable or nearby dining spots
 - **Travelers** exploring new areas
 - **Families** wanting reliable reviews before visiting restaurants
@@ -35,23 +36,28 @@ Each team member will take responsibility for major components during the initia
 RateMyBite will utilize the following:
 
 ### **Mapping APIs**
+
 - **Google Maps JavaScript API** or **Mapbox GL JS**
   - Display maps, pins, routes  
   - User geolocation detection  
 
 ### **Geocoding**
+
 - Convert restaurant addresses → latitude/longitude  
 - Reverse geocode user’s coordinates → address  
 
 ### **Authentication**
+
 - JWT (JSON Web Tokens) **or** Firebase Authentication  
 
 ### **Optional External APIs**
+
 - Yelp Fusion API  
 - Google Places API  
 (These may assist in populating initial restaurant data.)  
 
 ### **Media Storage (Optional)**
+
 - Cloudinary for storing review photos
 
 ---
@@ -59,16 +65,19 @@ RateMyBite will utilize the following:
 ## 4. System Architecture (High-Level)
 
 ### **Frontend**
+
 - React or Next.js  
 - Tailwind CSS for styling  
 - Axios for API requests  
 
 ### **Backend**
+
 - Node.js + Express REST API  
 - JWT authentication  
 - Role-based access control (User / Admin)  
 
 ### **Database**
+
 - MongoDB (Atlas)  
 - Collections:
   - `users`
@@ -77,6 +86,7 @@ RateMyBite will utilize the following:
   - `photos`
 
 ### **Interactions**
+
 - Frontend ↔ Backend (REST API)  
 - Backend ↔ Database (MongoDB queries)  
 - Backend ↔ External APIs (Maps, geocoding)  
@@ -86,6 +96,7 @@ RateMyBite will utilize the following:
 ## 5. Core Features Breakdown
 
 ### **User Features**
+
 - View restaurants on a map  
 - Search by cuisine, distance, rating  
 - View restaurant info and photos  
@@ -94,6 +105,7 @@ RateMyBite will utilize the following:
 - Mark favorites  
 
 ### **Admin Features**
+
 - Add/edit/delete restaurants  
 - Moderate reviews  
 - Manage cuisine categories  
@@ -101,9 +113,9 @@ RateMyBite will utilize the following:
 ---
 
 ## 6. Potential Future Enhancements
+
 - AI recommendations tailored to user preferences  
 - Trending food heatmap layer  
 - Social feed showcasing new reviews  
 - Gamification badges for top reviewers  
 - Restaurant route-planning  
-
