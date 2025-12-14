@@ -3,8 +3,8 @@ const mongoose = require("mongoose");
 const restaurantSchema = new mongoose.Schema({
   name: { type: String, required: true },
   address: String,
-  lat: Number,
-  lng: Number,
+  lat: { type: Number, default: null },
+  lng: { type: Number, default: null },
   category: String,
   avgRating: { type: Number, default: 0 },
   reviewCount: { type: Number, default: 0 },

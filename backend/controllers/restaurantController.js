@@ -1,6 +1,7 @@
 //This file is for the restuarant model's controller functions
 
 const Restaurant = require('../models/restaurant');
+const { geocodeAddress } = require('../services/geocoding');
 
 // GET /api/restaurants  – list all restaurants
 async function getRestaurants(req, res) {
@@ -29,10 +30,35 @@ async function getRestaurantById(req, res) {
 // POST /api/restaurants  – create a new restaurant
 async function createRestaurant(req, res) {
     try {
-        const newRestaurant = await Restaurant.create(req.body);
+        const { name, address, category } = req.body;
+
+        // If an address is provided, geocode it to get latitude and longitude
+        let lat = null;
+        let lng = null;
+
+        if (address && address.trim() !== '') {
+            const coords = await geocodeAddress(address.trim());
+            if (!coords) {
+                return res.status(400).json({ error: 'Failed to geocode address' });
+            }
+            lat = coords.lat;
+            lng = coords.lng;
+        }
+
+        const newRestaurant = await Restaurant.create({
+            name,
+            address,
+            category,
+            lat,
+            lng
+        });
+
         res.status(201).json(newRestaurant);
     } catch (error) {
-        res.status(400).json({ error: 'Failed to create restaurant', details: error.message });
+        res.status(400).json({
+            error: 'Failed to create restaurant',
+            details: error.message
+        });
     }
 }
 
@@ -40,16 +66,42 @@ async function createRestaurant(req, res) {
 async function updateRestaurant(req, res) {
     try {
         const { id } = req.params;
-        const updated = await Restaurant.findByIdAndUpdate(id, req.body, {
+        const updates = { ...req.body };
+
+        // If address is updated, re-geocode to update coordinates
+        if (typeof updates.address === 'string') {
+            const trimmedAddress = updates.address.trim();
+
+            if (trimmedAddress === '') {
+                // Address removed → remove coordinates
+                updates.address = '';   // keep address in sync
+                updates.lat = null;     // use null (more reliable than undefined)
+                updates.lng = null;
+            } else {
+                const coords = await geocodeAddress(trimmedAddress);
+                if (!coords) {
+                    return res.status(400).json({ error: 'Failed to geocode address' });
+                }
+                updates.address = trimmedAddress; // normalize
+                updates.lat = coords.lat;
+                updates.lng = coords.lng;
+            }
+        }
+
+        const updated = await Restaurant.findByIdAndUpdate(id, updates, {
             new: true,
             runValidators: true,
         });
+
         if (!updated) {
             return res.status(404).json({ error: 'Restaurant not found' });
         }
         res.json(updated);
     } catch (error) {
-        res.status(400).json({ error: 'Failed to update restaurant', details: error.message });
+        res.status(400).json({
+            error: 'Failed to update restaurant',
+            details: error.message
+        });
     }
 }
 
@@ -84,4 +136,8 @@ Errors are caught and the client receives an appropriate HTTP status code.
 findByIdAndUpdate with { new: true } returns the updated document.
 
 The functions are exported for use in route definitions.
+
+Additional behavior:
+- When creating or updating a restaurant, an address (if provided) is geocoded
+  to automatically generate latitude and longitude for map integration.
 */
