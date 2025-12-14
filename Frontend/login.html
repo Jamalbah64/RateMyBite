@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Login — RateMyBite</title>
+  <link rel="stylesheet" href="style.css" />
+  <script type="module" src="firebase.js"></script>
+</head>
+<body style="opacity:0; transition: opacity 0.3s ease;">
+  <nav class="navbar">
+    <div class="nav-left">
+      <img src="img/restaurant.png" class="logo-img" alt="Logo">
+      <h1 class="logo">RateMyBite</h1>
+    </div>
+    <ul class="nav-center">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="restaurants.html">Restaurants</a></li>
+    </ul>
+    <div class="nav-right">
+      <button id="login-signup" class="login-btn">Sign up</button>
+      <button class="logout-btn hidden">Logout</button>
+    </div>
+  </nav>
+
+  <main class="auth-page">
+    <form id="login-form" class="auth-card glass">
+      <h2>Login</h2>
+      <label>Email
+        <input id="login-email" type="email" required />
+      </label>
+      <label>Password
+        <input id="login-password" type="password" required minlength="6" />
+      </label>
+      <button type="submit" class="btn-primary">Login</button>
+      <p class="muted">Don't have an account? <a href="signup.html">Sign up</a></p>
+    </form>
+  </main>
+
+  <script type="module" src="auth.js"></script>
+  <script type="module" src="script.js"></script>
+</body>
+</html>
