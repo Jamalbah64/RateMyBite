@@ -4,8 +4,23 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>RateMyBite — Restaurants</title>
+
+  <!-- Main CSS -->
   <link rel="stylesheet" href="style.css" />
+
+  <!-- Leaflet CSS -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  />
+
+  <!-- Leaflet JS (must load before restaurants.js) -->
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    defer
+  ></script>
 </head>
+
 <body>
   <!-- NAVBAR -->
   <nav class="navbar">
@@ -26,15 +41,9 @@
     </div>
   </nav>
 
-  <!-- Profile Section -->
-  <div id="profile-container" class="glass" style="padding:12px; margin:12px 0; display:none;">
-    <h3>Profile</h3>
-    <p>Email: <span id="profile-email"></span></p>
-    <p>Role: <span id="profile-role"></span></p>
-    <button id="profile-logout" class="btn-ghost">Logout</button>
-  </div>
-
   <main class="page-container">
+
+    <!-- PAGE HEADER -->
     <header class="page-header glass">
       <h2>Restaurants</h2>
       <div class="list-controls">
@@ -46,9 +55,16 @@
       </div>
     </header>
 
+    <!-- MAP SECTION -->
+    <section class="map-section">
+      <div id="map"></div>
+    </section>
+
+    <!-- RESTAURANT LIST -->
     <section id="restaurant-list" class="restaurant-list">
       <!-- JS will populate -->
     </section>
+
   </main>
 
   <!-- Restaurant Detail Modal -->
@@ -81,6 +97,7 @@
     </div>
   </div>
 
+  <!-- Page JS (Firebase + Map logic lives here) -->
   <script type="module" src="restaurants.js"></script>
 </body>
 </html>
