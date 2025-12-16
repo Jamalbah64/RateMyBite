@@ -5,27 +5,30 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Sign Up — RateMyBite</title>
   <link rel="stylesheet" href="style.css" />
-  <script type="module" src="firebase.js"></script>
 </head>
-<body style="opacity:0; transition: opacity 0.3s ease;">
+<body>
   <nav class="navbar">
     <div class="nav-left">
       <img src="img/restaurant.png" class="logo-img" alt="Logo">
       <h1 class="logo">RateMyBite</h1>
     </div>
+
     <ul class="nav-center">
       <li><a href="index.html">Home</a></li>
       <li><a href="restaurants.html">Restaurants</a></li>
     </ul>
+
     <div class="nav-right">
-      <button id="signup-login" class="login-btn">Login</button>
-      <button class="logout-btn hidden">Logout</button>
+      <button onclick="location.href='login.html'" class="login-btn">Login</button>
     </div>
   </nav>
 
   <main class="auth-page">
     <form id="signup-form" class="auth-card glass">
       <h2>Create account</h2>
+      <label>Full name
+        <input id="signup-name" type="text" required />
+      </label>
       <label>Email
         <input id="signup-email" type="email" required />
       </label>
@@ -37,7 +40,6 @@
     </form>
   </main>
 
-  <script type="module" src="auth.js"></script>
-  <script type="module" src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>

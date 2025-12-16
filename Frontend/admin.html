@@ -1,26 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>RateMyBite Admin</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Admin — RateMyBite</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body class="admin-only">
+<body>
+  <nav class="navbar">
+    <div class="nav-left">
+      <img src="img/restaurant.png" class="logo-img" alt="Logo">
+      <h1 class="logo">RateMyBite</h1>
+    </div>
 
-  <nav>
-    <h2>RateMyBite Admin</h2>
-    <button class="logout-btn">Logout</button>
+    <ul class="nav-center">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="restaurants.html">Restaurants</a></li>
+    </ul>
+
+    <div class="nav-right">
+      <button onclick="location.href='login.html'" class="login-btn">Login</button>
+    </div>
   </nav>
 
-  <main class="container">
-    <div class="glass admin-card">
-      <h3>Pending Restaurant Claims</h3>
-      <ul id="claim-list"></ul>
-    </div>
+  <main class="page-container">
+    <header class="page-header glass">
+      <h2>Admin Dashboard</h2>
+      <p class="muted">Manage restaurants and moderate reviews (mock UI).</p>
+    </header>
+
+    <section class="admin-grid">
+      <div class="glass admin-card">
+        <h3>Add Restaurant</h3>
+        <form id="admin-add-form">
+          <input id="admin-name" placeholder="Name" required />
+          <input id="admin-cuisine" placeholder="Cuisine" required />
+          <button class="btn-primary" type="submit">Add</button>
+        </form>
+      </div>
+
+      <div class="glass admin-card" id="admin-rest-list">
+        <h3>Restaurants</h3>
+        <ul id="admin-rest-items"></ul>
+      </div>
+
+      <div class="glass admin-card" id="admin-reviews">
+        <h3>Pending Reviews</h3>
+        <div id="admin-review-items">No pending reviews (demo).</div>
+      </div>
+    </section>
   </main>
 
-  <script type="module" src="firebase.js"></script>
-  <script type="module" src="auth.js"></script>
-  <script type="module" src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>

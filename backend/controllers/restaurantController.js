@@ -1,7 +1,6 @@
 //This file is for the restuarant model's controller functions
 
 const Restaurant = require('../models/restaurant');
-const { geocodeAddress } = require('../services/geocoding');
 
 // GET /api/restaurants  – list all restaurants
 async function getRestaurants(req, res) {
@@ -54,10 +53,7 @@ async function createRestaurant(req, res) {
 
         res.status(201).json(newRestaurant);
     } catch (error) {
-        res.status(400).json({
-            error: 'Failed to create restaurant',
-            details: error.message
-        });
+        res.status(400).json({ error: 'Failed to create restaurant', details: error.message });
     }
 }
 
@@ -65,42 +61,16 @@ async function createRestaurant(req, res) {
 async function updateRestaurant(req, res) {
     try {
         const { id } = req.params;
-        const updates = { ...req.body };
-
-        // If address is updated, re-geocode to update coordinates
-        if (typeof updates.address === 'string') {
-            const trimmedAddress = updates.address.trim();
-
-            if (trimmedAddress === '') {
-                // Address removed → remove coordinates
-                updates.address = '';   // keep address in sync
-                updates.lat = null;     // use null (more reliable than undefined)
-                updates.lng = null;
-            } else {
-                const coords = await geocodeAddress(trimmedAddress);
-                if (!coords) {
-                    return res.status(400).json({ error: 'Failed to geocode address' });
-                }
-                updates.address = trimmedAddress; // normalize
-                updates.lat = coords.lat;
-                updates.lng = coords.lng;
-            }
-        }
-
-        const updated = await Restaurant.findByIdAndUpdate(id, updates, {
+        const updated = await Restaurant.findByIdAndUpdate(id, req.body, {
             new: true,
             runValidators: true,
         });
-
         if (!updated) {
             return res.status(404).json({ error: 'Restaurant not found' });
         }
         res.json(updated);
     } catch (error) {
-        res.status(400).json({
-            error: 'Failed to update restaurant',
-            details: error.message
-        });
+        res.status(400).json({ error: 'Failed to update restaurant', details: error.message });
     }
 }
 
@@ -135,8 +105,4 @@ Errors are caught and the client receives an appropriate HTTP status code.
 findByIdAndUpdate with { new: true } returns the updated document.
 
 The functions are exported for use in route definitions.
-
-Additional behavior:
-- When creating or updating a restaurant, an address (if provided) is geocoded
-  to automatically generate latitude and longitude for map integration.
 */

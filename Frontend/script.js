@@ -148,17 +148,23 @@ async function loadRestaurants() {
     if (markersLayer && pos) {
       const marker = L.marker([pos.lat, pos.lng]).addTo(markersLayer);
 
-      const ratingText = (r.avgRating !== undefined && r.avgRating !== null)
-        ? `⭐ ${Number(r.avgRating).toFixed(1)} (${r.reviewCount ?? 0})`
-        : "";
+  // auth utilities (demo)
+  function getUsers(){ return JSON.parse(localStorage.getItem(LS_USERS) || '[]'); }
+  function saveUser(u){ const arr = getUsers(); arr.push(u); localStorage.setItem(LS_USERS, JSON.stringify(arr)); }
+  function setCurrentUser(u){ localStorage.setItem(LS_CURRENT, JSON.stringify(u)); updateNavForAuth(); }
+  function getCurrentUser(){ return JSON.parse(localStorage.getItem(LS_CURRENT) || 'null'); }
+  function logout(){ localStorage.removeItem(LS_CURRENT); updateNavForAuth(); }
 
-      marker.bindPopup(`
-        <div style="min-width:180px;">
-          <div style="font-weight:700; margin-bottom:6px;">${escapeHtml(r.name ?? "Unnamed")}</div>
-          <div style="opacity:.85; margin-bottom:6px;">${escapeHtml(r.cuisine ?? r.category ?? "Unknown")}</div>
-          <div style="font-size:13px;">${escapeHtml(ratingText)}</div>
-        </div>
-      `);
+  // NAV auth buttons behavior
+  function updateNavForAuth(){
+    const u = getCurrentUser();
+    $$('.logout-btn').forEach(el => el.classList.toggle('hidden', !u));
+    $$('.login-btn').forEach(el => el.classList.toggle('hidden', !!u));
+  }
+  // Hook nav login buttons to redirect
+  $$('.login-btn').forEach(btn => btn.addEventListener('click', () => location.href = 'login.html'));
+
+  $$('.logout-btn').forEach(btn => btn.addEventListener('click', () => { logout(); alert('Logged out'); location.href = 'index.html'; }));
 
       bounds.push([pos.lat, pos.lng]);
     }
@@ -311,25 +317,87 @@ async function loadClaims() {
   });
 }
 
-// Approve button handler
-document.addEventListener("click", async (e) => {
-  if (!e.target.classList.contains("approve-btn")) return;
+    if (path === 'login.html') {
+      const form = $('#login-form');
+      form && form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const email = $('#login-email').value.trim();
+        const password = $('#login-password').value;
+        const users = getUsers();
+        const found = users.find(u => u.email === email && u.password === password);
+        if (found) {
+          setCurrentUser({name: found.name, email: found.email, role: found.role || 'user'});
+          alert('Login successful');
+          location.href = 'index.html';
+        } else {
+          alert('Invalid credentials (demo). Try signing up.');
+        }
+      });
+    }
 
-  const claimId = e.target.dataset.claimId;
-  const restaurantId = e.target.dataset.restaurantId;
-  const userUid = e.target.dataset.userUid;
+    if (path === 'signup.html') {
+      const form = $('#signup-form');
+      form && form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const name = $('#signup-name').value.trim();
+        const email = $('#signup-email').value.trim();
+        const password = $('#signup-password').value;
+        if (!name || !email || password.length < 6) {
+          alert('Please complete the form and choose a password with at least 6 characters.');
+          return;
+        }
+        // prevent duplicate emails
+        const users = getUsers();
+        if (users.find(u => u.email === email)) {
+          alert('An account with that email already exists.');
+          return;
+        }
+        const newUser = { name, email, password, role: 'user' };
+        saveUser(newUser);
+        setCurrentUser({ name, email, role: 'user' });
+        alert('Account created. You are now logged in (demo).');
+        location.href = 'index.html';
+      });
+    }
 
-  await updateDoc(doc(db, "restaurants", restaurantId), {
-    ownerUid: userUid,
-    isClaimed: true,
-  });
+    if (path === 'admin.html') {
+      // minimal admin interactions for demo
+      const form = document.getElementById('admin-add-form');
+      form && form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const name = document.getElementById('admin-name').value.trim();
+        const cuisine = document.getElementById('admin-cuisine').value.trim();
+        if (!name) { alert('Provide a name'); return; }
+        const list = JSON.parse(localStorage.getItem(LS_RESTAURANTS) || '[]');
+        const id = 'r' + (Date.now());
+        list.push({ id, name, cuisine, rating: 4.0, photo: 'img/placeholder.jpg', desc: 'Admin added (demo).' });
+        localStorage.setItem(LS_RESTAURANTS, JSON.stringify(list));
+        renderAdminList();
+        form.reset();
+      });
+      renderAdminList();
+    }
+  }
 
-  await updateDoc(doc(db, "restaurantClaims", claimId), {
-    status: "approved",
-  });
+  /* ----------------------------
+    Restaurants list & modal
+    ----------------------------*/
+  function renderRestaurantList(){
+    const container = $('#restaurant-list');
+    if (!container) return;
+    const list = JSON.parse(localStorage.getItem(LS_RESTAURANTS) || '[]');
+    const q = (document.getElementById('filter-cuisine')?.value || '').toLowerCase();
+    const sortBy = document.getElementById('sort-by')?.value || 'rating';
 
-  loadClaims();
-});
+    let filtered = list.filter(r => {
+      if (!q) return true;
+      return r.name.toLowerCase().includes(q) || (r.cuisine || '').toLowerCase().includes(q);
+    });
+
+    filtered.sort((a,b) => {
+      if (sortBy === 'rating') return (b.rating||0) - (a.rating||0);
+      return 0;
+    });
 
 // ===========================
 // INITIAL LOAD (page-safe)
@@ -364,56 +432,74 @@ document.addEventListener("DOMContentLoaded", () => {
   // admin claims page (if exists)
   loadClaims();
 
-  // Fade-in
-  document.body.style.opacity = "1";
+  // modal handling
+  function setupModal(){
+    const modal = $('#restaurant-modal');
+    const close = $('#modal-close');
+    close && close.addEventListener('click', () => { modal.classList.add('hidden'); });
+    modal && modal.addEventListener('click', (e)=> { if (e.target === modal) modal.classList.add('hidden'); });
 
-  // Smooth scrolling for in-page links
-  document.querySelectorAll('a[href^="#"]').forEach((link) => {
-    link.addEventListener("click", (e) => {
+    const form = $('#leave-review-form');
+    form && form.addEventListener('submit', (e) => {
       e.preventDefault();
-      const target = document.querySelector(link.getAttribute("href"));
-      if (target) target.scrollIntoView({ behavior: "smooth" });
-    });
-  });
-
-  // Navbar login button smooth redirect
-  const loginBtn = document.getElementById("nav-login");
-  if (loginBtn) {
-    loginBtn.addEventListener("click", () => {
-      document.body.style.opacity = "0";
-      setTimeout(() => {
-        location.href = "login.html";
-      }, 300);
+      const restId = form.dataset.restId;
+      const rating = document.getElementById('review-rating').value;
+      const comment = document.getElementById('review-comment').value.trim();
+      const user = getCurrentUser();
+      if (!user) { if (confirm('Login required to post a review. Login now?')) location.href = 'login.html'; return; }
+      if (!rating || !comment) { alert('Complete the review form'); return; }
+      const reviews = JSON.parse(localStorage.getItem(LS_REVIEWS) || '{}');
+      reviews[restId] = reviews[restId] || [];
+      reviews[restId].push({ rating: Number(rating), comment, author: user.name, created: Date.now() });
+      localStorage.setItem(LS_REVIEWS, JSON.stringify(reviews));
+      // clear fields
+      form.reset();
+      loadReviewsFor(restId);
+      alert('Review submitted (demo).');
     });
   }
 
-  // Hero "Create Account" smooth redirect
-  const heroSignup = document.getElementById("hero-signup");
-  if (heroSignup) {
-    heroSignup.addEventListener("click", (e) => {
-      e.preventDefault();
-      document.body.style.opacity = "0";
-      setTimeout(() => {
-        location.href = "signup.html";
-      }, 300);
-    });
+  function openRestaurantModal(id){
+    const rest = (JSON.parse(localStorage.getItem(LS_RESTAURANTS) || '[]') || []).find(r => r.id === id);
+    if (!rest) return;
+    const modal = $('#restaurant-modal');
+    const content = $('#modal-content');
+    if (!modal || !content) return;
+    content.innerHTML = `
+      <div style="display:flex; gap:12px; align-items:center;">
+        <img src="${rest.photo}" style="width:120px;height:120px;border-radius:10px;object-fit:cover" />
+        <div>
+          <h3 style="margin:0;color:var(--primary)">${rest.name}</h3>
+          <div class="muted">${rest.cuisine || 'Various'} • ${rest.rating?.toFixed(1) || '—'} ★</div>
+          <p class="muted" style="max-width:520px">${rest.desc || ''}</p>
+        </div>
+      </div>
+    `;
+    $('#leave-review-form').dataset.restId = id;
+    loadReviewsFor(id);
+    modal.classList.remove('hidden');
   }
 
-  // Auth UI toggle (guards for missing elements)
-  const logoutBtn = document.getElementById("nav-logout");
-  const profileBtn = document.getElementById("nav-profile");
+  function loadReviewsFor(restId){
+    const reviews = JSON.parse(localStorage.getItem(LS_REVIEWS) || '{}');
+    const list = reviews[restId] || [];
+    const container = $('#reviews-section');
+    if (!container) return;
+    container.innerHTML = `<h4>Reviews (${list.length})</h4>` + (list.length === 0 ? '<p class="muted">No reviews yet</p>' : list.map(r => `
+      <div class="review-item">
+        <div><span class="rating">${r.rating} ★</span> — <span class="muted">${r.author || 'Anonymous'}</span></div>
+        <div style="margin-top:6px">${r.comment}</div>
+      </div>
+    `).join(''));
+  }
 
-  onAuthStateChanged(auth, (user) => {
-    if (!loginBtn || !logoutBtn) return;
-
-    if (user) {
-      loginBtn.classList.add("hidden");
-      logoutBtn.classList.remove("hidden");
-      if (profileBtn) profileBtn.classList.remove("hidden");
-    } else {
-      loginBtn.classList.remove("hidden");
-      logoutBtn.classList.add("hidden");
-      if (profileBtn) profileBtn.classList.add("hidden");
-    }
-  });
-});
+  /* ----------------------------
+     Admin helpers
+     ----------------------------*/
+  function renderAdminList(){
+    const list = JSON.parse(localStorage.getItem(LS_RESTAURANTS) || '[]');
+    const ul = $('#admin-rest-items');
+    if (!ul) return;
+    ul.innerHTML = list.map(r => `<li style="margin-bottom:8px">${r.name} <span class="muted">(${r.cuisine || '—'})</span></li>`).join('');
+  }
+})();

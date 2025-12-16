@@ -5,21 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Login — RateMyBite</title>
   <link rel="stylesheet" href="style.css" />
-  <script type="module" src="firebase.js"></script>
 </head>
-<body style="opacity:0; transition: opacity 0.3s ease;">
+<body>
   <nav class="navbar">
     <div class="nav-left">
       <img src="img/restaurant.png" class="logo-img" alt="Logo">
       <h1 class="logo">RateMyBite</h1>
     </div>
+
     <ul class="nav-center">
       <li><a href="index.html">Home</a></li>
       <li><a href="restaurants.html">Restaurants</a></li>
     </ul>
+
     <div class="nav-right">
-      <button id="login-signup" class="login-btn">Sign up</button>
-      <button class="logout-btn hidden">Logout</button>
+      <button onclick="location.href='signup.html'" class="login-btn">Sign up</button>
     </div>
   </nav>
 
@@ -37,7 +37,6 @@
     </form>
   </main>
 
-  <script type="module" src="auth.js"></script>
-  <script type="module" src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
