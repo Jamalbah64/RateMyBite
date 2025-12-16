@@ -19,6 +19,14 @@ const profileLogout = document.getElementById("profile-logout");
 const loginBtn = document.getElementById("nav-login");
 const logoutBtn = document.getElementById("nav-logout");
 
+// Add Restaurant form elements (must exist in restaurants.html)
+const addForm = document.getElementById("add-restaurant-form");
+const addName = document.getElementById("add-name");
+const addCategory = document.getElementById("add-category");
+const addAddress = document.getElementById("add-address");
+const addImageUrl = document.getElementById("add-imageUrl");
+const addStatus = document.getElementById("add-status");
+
 let currentRestaurantId = null;
 let map = null;
 let markersLayer = null;
@@ -150,6 +158,73 @@ function renderMarkers(restaurants) {
   if (firstPos) {
     map.setView([firstPos.lat, firstPos.lng], 12);
   }
+}
+
+// ------------------- ADD RESTAURANT (ADDRESS -> GEOCODING -> PIN) -------------------
+async function createRestaurantOnBackend(payload) {
+  const res = await fetch(`${apiBase()}/api/restaurants`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+
+  // Try to parse JSON even on errors (backend returns {error, details})
+  let data = null;
+  try {
+    data = await res.json();
+  } catch {
+    data = null;
+  }
+
+  if (!res.ok) {
+    const msg = data?.error || "Failed to create restaurant";
+    const details = data?.details ? ` (${data.details})` : "";
+    throw new Error(`${msg}${details}`);
+  }
+
+  return data;
+}
+
+if (addForm) {
+  addForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const name = addName?.value.trim();
+    const category = addCategory?.value.trim();
+    const address = addAddress?.value.trim();
+    const imageUrl = addImageUrl?.value.trim();
+
+    if (!name || !category || !address) {
+      if (addStatus) addStatus.textContent = "Please fill in name, category, and address.";
+      return;
+    }
+
+    try {
+      if (addStatus) addStatus.textContent = "Saving... (geocoding address)";
+
+      // This triggers backend geocoding and stores lat/lng in MongoDB
+      await createRestaurantOnBackend({
+        name,
+        category,
+        address,
+        imageUrl: imageUrl || undefined
+      });
+
+      if (addStatus) addStatus.textContent = "Added! Reloading map...";
+      addForm.reset();
+
+      // Refresh list and markers (GET -> includes new lat/lng)
+      await loadRestaurants();
+
+      if (addStatus) addStatus.textContent = "Done.";
+      setTimeout(() => {
+        if (addStatus) addStatus.textContent = "";
+      }, 1500);
+    } catch (err) {
+      console.error(err);
+      if (addStatus) addStatus.textContent = err.message || "Failed to add restaurant.";
+    }
+  });
 }
 
 // ------------------- MODAL -------------------

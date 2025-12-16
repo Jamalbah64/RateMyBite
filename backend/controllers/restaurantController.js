@@ -26,10 +26,31 @@ async function getRestaurantById(req, res) {
     }
 }
 
-// POST /api/restaurants  – create a new restaurant
+// POST /api/restaurants
 async function createRestaurant(req, res) {
     try {
-        const newRestaurant = await Restaurant.create(req.body);
+        const { name, address, cuisine } = req.body;
+
+        let lat = null;
+        let lng = null;
+
+        if (address && address.trim() !== '') {
+            const coords = await geocodeAddress(address.trim());
+            if (!coords) {
+                return res.status(400).json({ error: 'Failed to geocode address' });
+            }
+            lat = coords.lat;
+            lng = coords.lng;
+        }
+
+        const newRestaurant = await Restaurant.create({
+            name,
+            address,
+            category: cuisine, // ★ ここ重要
+            lat,
+            lng
+        });
+
         res.status(201).json(newRestaurant);
     } catch (error) {
         res.status(400).json({ error: 'Failed to create restaurant', details: error.message });

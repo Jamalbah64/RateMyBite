@@ -4,9 +4,35 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>RateMyBite — Home</title>
+
+  <!-- Main CSS -->
   <link rel="stylesheet" href="style.css" />
+
+  <!-- Leaflet CSS (Home map) -->
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+  />
+
+  <!-- Leaflet JS (must load before script.js uses L) -->
+  <script
+    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    defer
+  ></script>
+
+  <!-- Ensure Home map has height (otherwise Leaflet shows blank) -->
+  <style>
+    #home-map {
+      height: 420px;
+      width: 100%;
+      border-radius: 18px;
+      overflow: hidden;
+    }
+  </style>
 </head>
-<body>
+
+<body style="opacity:0; transition: opacity 0.3s ease;">
+
   <!-- NAVBAR -->
   <nav class="navbar">
     <div class="nav-left">
@@ -44,13 +70,18 @@
     </div>
 
     <div class="search-container">
-      <input id="global-search" type="text" class="search-input" placeholder="Search for a restaurant or cuisine..." />
+        <input id="global-search" type="text" class="search-input" placeholder="Search for a restaurant or cuisine..." />
+
+        <!-- Suggestions dropdown (Home search) -->
+        <div id="search-suggestions" class="search-suggestions glass hidden"></div>
     </div>
-  </header>
+
+   </header>
 
   <!-- MAP -->
-  <section id="map" class="map-section">
-    <div class="map-placeholder glass">Map Placeholder — integrate Google Maps or Mapbox here.</div>
+  <section class="map-section">
+    <!-- Leaflet map container (Home) -->
+    <div id="home-map"></div>
   </section>
 
   <!-- FEATURES -->
@@ -114,6 +145,8 @@
     <p>© 2025 RateMyBite. All rights reserved.</p>
   </footer>
 
-  <script src="script.js"></script>
+  <!-- Page JS -->
+  <script type="module" src="script.js"></script>
+  <script type="module" src="auth.js"></script>
 </body>
 </html>

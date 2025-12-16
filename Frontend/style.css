@@ -148,3 +148,229 @@ body {
   .hero-content { flex-direction:column; align-items:center; text-align:center; }
   .admin-grid { grid-template-columns:1fr; }
 }
+/* role-based visibility */
+.admin-only {
+  display: none;
+}
+
+.owner-only {
+  display: none;
+}
+
+.is-admin .admin-only {
+  display: block;
+}
+
+.is-owner .owner-only {
+  display: block;
+}
+.role-badge {
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.15);
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--primary);
+  letter-spacing: 0.4px;
+}
+.claim-btn {
+  margin-top: 10px;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.claim-btn:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+.claim-status {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.1);
+}
+
+.claim-status.pending {
+  color: #facc15;
+}
+
+.claim-status.approved {
+  color: #22c55e;
+}
+
+.claim-status.rejected {
+  color: #ef4444;
+}
+.claim-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.claim-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  border-bottom: 1px dashed rgba(255,255,255,0.06);
+  gap: 12px;
+}
+.owner-edit-btn {
+  margin-top: 8px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.14);
+  color: white;
+  font-weight: 700;
+}
+
+.owner-edit-btn:hover {
+  background: var(--primary);
+  color: black;
+}
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.locked {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+/* NAVBAR PROFILE BUTTON */
+#nav-profile {
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  padding: 6px 10px;
+  font-weight: 700;
+  background: transparent;
+  color: white;
+  cursor: pointer;
+  transition: 0.15s;
+}
+
+#nav-profile:hover {
+  background: var(--primary);
+  color: white;
+  transform: translateY(-1px);
+}
+
+/* PROFILE PAGE */
+#profile-email,
+#profile-role {
+  font-weight: 600;
+  color: var(--primary);
+  margin-bottom: 6px;
+}
+
+#user-reviews {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.review-item {
+  padding: 12px;
+  border-radius: 12px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  color: white;
+}
+
+.review-item .rating {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.review-item p {
+  margin: 4px 0 0 0;
+}
+
+/* PROFILE LOGOUT BUTTON */
+#profile-logout {
+  margin-top: 16px;
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.12);
+  color: white;
+  border: none;
+  transition: 0.2s;
+}
+#profile-logout:hover {
+  background: var(--primary);
+  transform: translateY(-2px);
+}
+
+/* NAVBAR PROFILE BUTTON */
+.nav-right #nav-profile {
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-weight: 700;
+  border: 1px solid rgba(255,255,255,0.08);
+  text-decoration: none;
+  color: white;
+  transition: 0.2s;
+}
+.nav-right #nav-profile:hover {
+  background: var(--primary);
+  color: white;
+  transform: translateY(-2px);
+}
+
+/* RESPONSIVE */
+@media (max-width:720px) {
+  #user-reviews {
+    gap: 10px;
+  }
+  .review-item {
+    padding: 10px;
+  }
+}
+
+/* Home search suggestions */
+.search-container {
+  position: relative;
+}
+
+.search-suggestions {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 10px);
+  z-index: 50;
+  padding: 10px;
+  border-radius: 16px;
+  max-height: 280px;
+  overflow: auto;
+}
+
+.search-suggestions.hidden {
+  display: none;
+}
+
+.search-suggestion-item {
+  padding: 10px 12px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.search-suggestion-item:hover {
+  filter: brightness(1.08);
+}
+
+.search-suggestion-title {
+  font-weight: 700;
+}
+
+.search-suggestion-sub {
+  opacity: 0.85;
+  font-size: 13px;
+}
