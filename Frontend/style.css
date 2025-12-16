@@ -105,6 +105,16 @@ body {
 .map-section { padding:22px; }
 .map-placeholder { height:320px; display:flex; align-items:center; justify-content:center; color:#ddd; border-radius:14px; }
 
+/* Leaflet map container (required) */
+#map {
+  height: 500px;
+  width: 100%;
+  margin-top: 20px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
 /* FEATURES */
 .features { padding:32px 22px 46px; display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:18px; }
 .feature-card { padding:18px; text-align:center; }

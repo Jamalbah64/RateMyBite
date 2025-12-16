@@ -5,18 +5,10 @@ const path = require('path');
 const dotenv = require('dotenv');
 dotenv.config();
 
-const cors = require('cors'); // add
-
 const restaurantRoutes = require('./routes/restaurants');
 
 const app = express();
 app.use(express.json()); // parse JSON bodies
-
-// add (CORS)
-app.use(cors({
-  origin: ["http://localhost:3000"],  // フロントのURL
-  methods: ["GET","POST","PUT","PATCH","DELETE","OPTIONS"],
-}));
 
 // Serve static files from the frontend directory
 app.use(express.static(path.join(__dirname, '../frontend')));
