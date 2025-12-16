@@ -163,8 +163,8 @@
   }
 
   /* ----------------------------
-     Restaurants list & modal
-     ----------------------------*/
+    Restaurants list & modal
+    ----------------------------*/
   function renderRestaurantList(){
     const container = $('#restaurant-list');
     if (!container) return;
