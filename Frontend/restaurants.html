@@ -55,6 +55,21 @@
       </div>
     </header>
 
+    <!-- ADD RESTAURANT (NEW) -->
+    <section class="glass" style="padding:14px; margin: 16px 0;">
+      <h3 style="margin:0 0 10px 0;">Add a Restaurant</h3>
+
+      <form id="add-restaurant-form" style="display:grid; gap:10px;">
+        <input id="add-name" placeholder="Restaurant name" required />
+        <input id="add-category" placeholder="Category (e.g., Japanese)" required />
+        <input id="add-address" placeholder="Address (e.g., 123 Main St, Manchester, NH)" required />
+        <input id="add-imageUrl" placeholder="Image URL (optional)" />
+
+        <button type="submit" class="btn-primary">Add</button>
+        <p id="add-status" class="muted" style="margin:0;"></p>
+      </form>
+    </section>
+
     <!-- MAP SECTION -->
     <section class="map-section">
       <div id="map"></div>

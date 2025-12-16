@@ -364,3 +364,43 @@ body {
     padding: 10px;
   }
 }
+
+/* Home search suggestions */
+.search-container {
+  position: relative;
+}
+
+.search-suggestions {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 10px);
+  z-index: 50;
+  padding: 10px;
+  border-radius: 16px;
+  max-height: 280px;
+  overflow: auto;
+}
+
+.search-suggestions.hidden {
+  display: none;
+}
+
+.search-suggestion-item {
+  padding: 10px 12px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.search-suggestion-item:hover {
+  filter: brightness(1.08);
+}
+
+.search-suggestion-title {
+  font-weight: 700;
+}
+
+.search-suggestion-sub {
+  opacity: 0.85;
+  font-size: 13px;
+}

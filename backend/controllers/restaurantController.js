@@ -27,12 +27,11 @@ async function getRestaurantById(req, res) {
     }
 }
 
-// POST /api/restaurants  – create a new restaurant
+// POST /api/restaurants
 async function createRestaurant(req, res) {
     try {
-        const { name, address, category } = req.body;
+        const { name, address, cuisine } = req.body;
 
-        // If an address is provided, geocode it to get latitude and longitude
         let lat = null;
         let lng = null;
 
@@ -48,7 +47,7 @@ async function createRestaurant(req, res) {
         const newRestaurant = await Restaurant.create({
             name,
             address,
-            category,
+            category: cuisine, // ★ ここ重要
             lat,
             lng
         });
